@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Vanaspati</string>
+    <string name="login">Login</string>
+    <string name="profile_title">Profile Screen</string>
+    <string name="welcome_to_profile">Welcome to Profile</string>
+    <string name="welcome_message">Welcome %1$s</string>
+    <string name="logout">Logout</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="_91_9876543210">+91 9876543210</string>
+    <string name="vaani_email_com">vaani@email.com</string>
+    <string name="vaani">Vaani</string>
+    <string name="profile_picture">Profile_Picture</string>
+    <string name="plant_care_tips">🌼 Plant Care Tips</string>
+    <string name="add_new_plant">🪴 Add New Plant</string>
+    <string name="my_plants">🌱 My Plants</string>
+    <string name="care_in_your_language">Care in Your Language</string>
+    <string name="english">English</string>
+    <string name="hindi">हिंदी (Hindi)</string>
+    <string name="confident_short_tips">🌳 Confident (Short tips)</string>
+    <string name="intermediate_balanced">🌿 Intermediate (Balanced)</string>
+    <string name="beginner_simple_tips">🌱 Beginner (Simple tips)</string>
+    <string name="how_much_help_do_you_want">How much help do you want?</string>
+    <string name="profile_header_format">%1$s\n%2$s | %3$s</string>
 </resources>
