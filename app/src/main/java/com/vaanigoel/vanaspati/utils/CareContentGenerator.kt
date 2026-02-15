@@ -1,16 +1,16 @@
 package com.vaanigoel.vanaspati.utils
 
-//import com.google.ai.client.generativeai.GenerativeModel
+import com.google.genai.Client
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class CareContentGenerator(private val prefs: PrefsManager) {
+//class CareContentGenerator(private val prefs: PrefsManager) {
 
     // 1. Change modelName back to "gemini-pro"
     // 2. Remove any "generationConfig" or "requestOptions" that cause red errors
 //    private val generativeModel = GenerativeModel(
 //        modelName = "gemini-1.5-flash",
-//        apiKey = "AIzaSyByxJLHPipRhnDOIMYf5O3yy8iEXjkEKg4"
+//
 //    )
 
 //    suspend fun generateAiTip(plantName: String): String = withContext(Dispatchers.IO) {
@@ -34,6 +34,31 @@ class CareContentGenerator(private val prefs: PrefsManager) {
 //            android.util.Log.e("GeminiError", "Failed: ${e.message}")
             // 4. Return a "Safe" fallback tip so the app doesn't look broken
 //            "Give your $plantName some water and ensure it gets enough sunlight."
+//        }
+//    }
+//}
+
+class GenAiHelper(apiKey: String) {
+    // Initialize the new unified client
+//    private val client = Client.builder()
+//
+//        .build()
+
+//    suspend fun getPlantCareTip(plantName: String): String? = withContext(Dispatchers.IO) {
+//        try {
+//            // Using the latest 2026 stable model: gemini-3-flash
+//            // Using the latest 2026 Unified SDK
+//            val response = client.models.generateContent("gemini-3-flash", "Tell me how to grow a sunflower.")
+//
+//// Call the function 'text()' to get the String
+//            val resultText: String = response.text()
+//
+//// Now you can use the String normally
+//            println("AI says: $resultText")
+//            resultText
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            null
 //        }
 //    }
 }
