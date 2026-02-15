@@ -21,4 +21,9 @@
     <string name="beginner_simple_tips">🌱 Beginner (Simple tips)</string>
     <string name="how_much_help_do_you_want">How much help do you want?</string>
     <string name="profile_header_format">%1$s\n%2$s | %3$s</string>
+    <string name="loading_profile">Loading Profile…</string>
+    <string name="daily_care_tip">🌱 Daily Care Tip</string>
+    <string name="ai_is_analyzing_your_plants">AI is analyzing your plants…</string>
+    <string name="ai_thinking">Vanaspati AI is thinking…</string>
+    <string name="welcome_header">Welcome, %1$s\n(%2$s | %3$s)</string>
 </resources>
