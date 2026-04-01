@@ -9,61 +9,62 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_centerInParent="true"
-        android:padding="24dp"
-        android:background="@drawable/g"
-        android:elevation="8dp">
+        android:background="@color/material_on_primary_disabled"
+        android:elevation="8dp"
+        android:orientation="vertical"
+        android:padding="24dp">
 
         <!-- Leaf Icon -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="🌿"
-            android:textSize="40sp"
-            android:layout_gravity="center"/>
+            android:textSize="40sp" />
 
         <!-- Title -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome Back"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:layout_gravity="center"/>
+            android:text="Welcome Back"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <!-- Username -->
         <EditText
             android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username"
+            android:layout_marginTop="20dp"
             android:background="@drawable/input_bg"
-            android:padding="12dp"
-            android:layout_marginTop="20dp"/>
+            android:hint="Username"
+            android:padding="12dp" />
 
         <!-- Password -->
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/input_bg"
             android:hint="Password"
             android:inputType="textPassword"
-            android:background="@drawable/input_bg"
-            android:padding="12dp"
-            android:layout_marginTop="10dp"/>
+            android:padding="12dp" />
 
         <!-- Login Button -->
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_style"
             android:text="Login"
             android:textColor="#FFFFFF"
-            android:background="@drawable/button_style"
-            android:layout_marginTop="20dp"/>
+            android:textColorLink="#242C57" />
 
     </LinearLayout>
 
