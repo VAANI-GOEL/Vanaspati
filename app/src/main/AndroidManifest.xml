@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.vaanigoel.vanaspati">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+=======
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+>>>>>>> 18da9b2 (Completed Branch 1: Fixed PrefsManager logic, resolved ProfileActivity conflicts, and cleaned onboarding UI.)
 
     <application
         android:allowBackup="true"
@@ -14,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VanaspatiApp">
         <activity
+<<<<<<< HEAD
             android:name=".RoseActivity"
             android:exported="false" />
         <activity
@@ -21,6 +26,15 @@
             android:exported="false" />
         <activity
             android:name=".HomeDashboard"
+=======
+            android:name=".onboarding.HelpLevelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.LanguageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.LoginActivity"
+>>>>>>> 18da9b2 (Completed Branch 1: Fixed PrefsManager logic, resolved ProfileActivity conflicts, and cleaned onboarding UI.)
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +43,12 @@
             </intent-filter>
         </activity>
         <activity
+<<<<<<< HEAD
+=======
+            android:name=".profile.ProfileActivity"
+            android:exported="false" />
+        <activity
+>>>>>>> 18da9b2 (Completed Branch 1: Fixed PrefsManager logic, resolved ProfileActivity conflicts, and cleaned onboarding UI.)
             android:name=".MainActivity"
             android:exported="false" />
     </application>

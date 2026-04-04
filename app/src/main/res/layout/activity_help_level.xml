@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#E8F5E9"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/how_much_help_do_you_want"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#2E7D32"
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/btnBeginner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/beginner_simple_tips"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#388E3C"/>
+
+    <Button
+        android:id="@+id/btnIntermediate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/intermediate_balanced"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#388E3C"/>
+
+    <Button
+        android:id="@+id/btnConfident"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/confident_short_tips"
+        android:backgroundTint="#388E3C"/>
+
+</LinearLayout>
