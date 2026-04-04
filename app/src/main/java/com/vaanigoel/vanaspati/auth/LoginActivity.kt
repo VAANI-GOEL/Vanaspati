@@ -1,18 +1,12 @@
 package com.vaanigoel.vanaspati.auth
-
 import android.os.Bundle
-import android.content.Intent
-
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.vaanigoel.vanaspati.R
-import com.vaanigoel.vanaspati.profile.ProfileActivity
+import android.util.Patterns
 import android.widget.Button
-import com.vaanigoel.vanaspati.utils.PrefsManager
-import android.widget.EditText
 import android.widget.Toast
-
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import com.vaanigoel.vanaspati.R
 
 class LoginActivity : AppCompatActivity() {
 
@@ -20,33 +14,43 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val username = findViewById<EditText>(R.id.etUsername)
-        val password = findViewById<EditText>(R.id.etPassword)
-        val loginBtn = findViewById<Button>(R.id.btnLogin)
-        val prefs = PrefsManager(this)
-        loginBtn.setOnClickListener {
-            if (username.text.toString().isNotEmpty() &&
-                password.text.toString().isNotEmpty()) {
-                if (prefs.isFirstLogin()) {
-                    // Redirect to Onboarding (Language Selection)
-                    // Note: You'll need to create LanguageActivity in your onboarding package
-                    val intent = Intent(this, com.vaanigoel.vanaspati.onboarding.LanguageActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    // Already set up, go to Profile as you currently do
-                    val intent = Intent(this, ProfileActivity::class.java)
-                    intent.putExtra("username", "Vaani")
-                    startActivity(intent)
-                }
+        // Initialize Views
+        val emailLayout = findViewById<TextInputLayout>(R.id.emailLayout)
+        val passwordLayout = findViewById<TextInputLayout>(R.id.passwordLayout)
+        val etEmail = findViewById<TextInputEditText>(R.id.etEmail)
+        val etPassword = findViewById<TextInputEditText>(R.id.etPassword)
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
 
-                Toast.makeText(this, "Login Successful 🌿", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+        btnLogin.setOnClickListener {
+            val email = etEmail.text.toString().trim()
+            val password = etPassword.text.toString().trim()
+
+            // Reset errors
+            emailLayout.error = null
+            passwordLayout.error = null
+
+            // Validation Logic
+            var isValid = true
+
+            if (email.isEmpty()) {
+                emailLayout.error = "Email is required"
+                isValid = false
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                emailLayout.error = "Please enter a valid email"
+                isValid = false
             }
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-                insets
+
+            if (password.isEmpty()) {
+                passwordLayout.error = "Password is required"
+                isValid = false
+            } else if (password.length < 6) {
+                passwordLayout.error = "Password must be at least 6 characters"
+                isValid = false
+            }
+
+            if (isValid) {
+                Toast.makeText(this, "Logging in to Vanaspati...", Toast.LENGTH_SHORT).show()
+                // Proceed to next screen
             }
         }
     }
