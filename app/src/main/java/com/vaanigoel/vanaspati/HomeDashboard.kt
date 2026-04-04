@@ -1,55 +1,49 @@
 package com.vaanigoel.vanaspati
 
-import com.vaanigoel.vanaspati.databinding.ActivityHomeDashboardBinding
 import android.content.Intent
 import android.os.Bundle
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.Button
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.*
-import android.view.View
-
+// Using the binding you already imported!
+import com.vaanigoel.vanaspati.databinding.ActivityHomeDashboardBinding
 
 class HomeDashboard : AppCompatActivity() {
 
+    private lateinit var binding: ActivityHomeDashboardBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_dashboard)
 
-        val tvPlantCount = findViewById<TextView>(R.id.tvPlantCount)
-        val btnAddPlant = findViewById<Button>(R.id.btnAddPlant)
-        val spinner = findViewById<Spinner>(R.id.spinnerplants)
-        val plants = arrayOf("My Plants ⬇\uFE0F", "Rose")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, plants)
-        spinner.adapter= adapter
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        // Initialize View Binding
+        binding = ActivityHomeDashboardBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        // 1. Setup the Data (No need for "My Plants" as an item anymore)
+        val plants = arrayOf("Rose", "Money Plant", "Aloe Vera")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, plants)
 
-                if (position == 0) return
+        // 2. Attach adapter to the AutoCompleteTextView
+        binding.autoCompletePlants.setAdapter(adapter)
 
-                when (position) {
-                    1-> {
-                        val intent = Intent(this@HomeDashboard, RoseActivity::class.java)
-                        startActivity(intent)
-                    }
+        // 3. Handle the selection (Visibility logic)
+        binding.autoCompletePlants.setOnItemClickListener { parent, _, position, _ ->
+            val selectedPlant = parent.getItemAtPosition(position).toString()
+
+            when (selectedPlant) {
+                "Rose" -> {
+                    startActivity(Intent(this, RoseActivity::class.java))
                 }
+                // Add more plants here later
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
+        // 4. Update the Plant Count Text
+        val count = 1
+        binding.tvPlantCount.text = if (count == 1) "You have 1 plant" else "You have $count plants"
 
-        //Temporary data
-        tvPlantCount.text = "You have 1 plants"
-
-        btnAddPlant.setOnClickListener {
+        // 5. Add Plant Button logic
+        binding.btnAddPlant.setOnClickListener {
             startActivity(Intent(this, AddPlantActivity::class.java))
         }
-        }
     }
-
+}
