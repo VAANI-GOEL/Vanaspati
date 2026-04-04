@@ -58,8 +58,11 @@
             android:id="@+id/spinnerplants"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
-
+            android:layout_marginTop="16dp"
+            android:background="@drawable/spinnerplants"
+            app:layout_constraintTop_toBottomOf="@id/btnAddPlant"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </LinearLayout>
 </ScrollView>
