@@ -41,6 +41,8 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.android.material:material:1.11.0")
+    implementation("com.airbnb.android:lottie:6.0.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

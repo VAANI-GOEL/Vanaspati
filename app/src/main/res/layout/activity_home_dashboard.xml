@@ -63,7 +63,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:hint="Select Your Plant"
-            app:boxCornerRadiusAround="12dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusBottomEnd="8dp"
             app:boxStrokeColor="#2D5A27"
             app:hintTextColor="#2D5A27">
 
