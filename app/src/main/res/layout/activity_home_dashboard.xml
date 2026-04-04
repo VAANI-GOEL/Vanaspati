@@ -37,7 +37,7 @@
                     android:id="@+id/tvPlantCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="You have 0 plants"
+                    android:text="You have 1 plants"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
 
@@ -56,20 +56,26 @@
             android:shadowColor="#4AC34A"
             android:text="Add Plant 🌱" />
 
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinnerplants"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_height="55dp"
             android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/spinnerplants"
-            android:shadowColor="#4AC34A"
-            android:visibility="visible"
-            tools:visibility="visible"
-            android:elevation="4dp"
+            android:elevation="8dp"
+            android:backgroundTint="#4CAF50"
+            android:backgroundTintMode="src_over"
+            android:nestedScrollingEnabled="true"
             android:overlapAnchor="false"
-            android:spinnerMode="dropdown"/>
+            android:shadowColor="#4AC34A"
+            android:soundEffectsEnabled="true"
+            android:spinnerMode="dropdown"
+            android:touchscreenBlocksFocus="true"
+            android:verticalScrollbarPosition="defaultPosition"
+            android:visibility="visible"
+            tools:visibility="visible" />
 <!--            android:backgroundTint="#4CAF50"-->
 <!--            android:foregroundTint="#4CAF58"-->
 

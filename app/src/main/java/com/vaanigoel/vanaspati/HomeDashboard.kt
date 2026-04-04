@@ -45,7 +45,7 @@ class HomeDashboard : AppCompatActivity() {
 
 
         //Temporary data
-        tvPlantCount.text = "You have 0 plants"
+        tvPlantCount.text = "You have 1 plants"
 
         btnAddPlant.setOnClickListener {
             startActivity(Intent(this, AddPlantActivity::class.java))
