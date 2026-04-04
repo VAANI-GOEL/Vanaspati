@@ -2,15 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.vaanigoel.vanaspati">
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.VanaspatiApp"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round">
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.VanaspatiApp">
+        <activity
+            android:name=".RoseActivity"
+            android:exported="false" />
         <activity
             android:name=".AddPlantActivity"
             android:exported="false" />

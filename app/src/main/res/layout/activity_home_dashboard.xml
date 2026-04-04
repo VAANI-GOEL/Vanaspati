@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#5ccf23">
@@ -51,18 +52,27 @@
             android:id="@+id/btnAddPlant"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Plant 🌱"
-            android:layout_marginBottom="12dp"/>
-        
+            android:layout_marginBottom="12dp"
+            android:shadowColor="#4AC34A"
+            android:text="Add Plant 🌱" />
+
         <Spinner
             android:id="@+id/spinnerplants"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
             android:background="@drawable/spinnerplants"
-            app:layout_constraintTop_toBottomOf="@id/btnAddPlant"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:shadowColor="#4AC34A"
+            android:visibility="visible"
+            tools:visibility="visible"
+            android:elevation="4dp"
+            android:overlapAnchor="false"
+            android:spinnerMode="dropdown"/>
+<!--            android:backgroundTint="#4CAF50"-->
+<!--            android:foregroundTint="#4CAF58"-->
+
 
     </LinearLayout>
 </ScrollView>

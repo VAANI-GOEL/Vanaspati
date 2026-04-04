@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <shape xmlns:android="http://schemas.android.com/apk/res/android">
-        <solid android:color="#FFFFFF"/>
+    <ripple xmlns:android="http://schemas.android.com/apk/res/android"
+        android:color="#40FFFFFF"> <!-- This adds a tap effect -->
+        <item>
+            <shape android:shape="rectangle">
+                <!-- Matches your theme's dark green/grey shadow color -->
+                <solid android:color="#4CAF50" />
+                <corners android:radius="24dp" />
+                <padding
+                    android:left="16dp"
+                    android:right="16dp"
+                    android:top="12dp"
+                    android:bottom="12dp" />
+            </shape>
+        </item>
+    </ripple>
 
-        <corners android:radius="12dp"/>
-
-        <stroke
-            android:width="2dp"
-            android:color="#4CAF50"/>
-    </shape>
 </selector>

@@ -23,10 +23,9 @@ class HomeDashboard : AppCompatActivity() {
         val tvPlantCount = findViewById<TextView>(R.id.tvPlantCount)
         val btnAddPlant = findViewById<Button>(R.id.btnAddPlant)
         val spinner = findViewById<Spinner>(R.id.spinnerplants)
-        val plants = arrayOf("Select Plant", "Rose")
+        val plants = arrayOf("My Plants ⬇\uFE0F", "Rose")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, plants)
         spinner.adapter= adapter
-
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
