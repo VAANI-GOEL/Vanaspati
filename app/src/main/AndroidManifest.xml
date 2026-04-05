@@ -20,41 +20,39 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VanaspatiApp"
         tools:targetApi="31">
-
+        <activity
+            android:name=".utils.ReviewProgressActivity"
+            android:exported="false" />
         <activity
             android:name=".auth.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".onboarding.LanguageActivity"
             android:exported="false" />
         <activity
             android:name=".onboarding.HelpLevelActivity"
             android:exported="false" />
-
         <activity
             android:name=".HomeDashboard"
             android:exported="false" />
         <activity
             android:name=".profile.ProfileActivity"
             android:exported="false" />
-
         <activity
             android:name=".RoseActivity"
             android:exported="false" />
         <activity
             android:name=".AddPlantActivity"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>
