@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="24dp"
                 android:layout_marginBottom="20dp"
-                app:cardBackgroundColor="#FFFFFF">
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -71,7 +71,7 @@
                         android:layout_height="wrap_content"
                         android:text="Rose Care Cheat Sheet"
                         android:textStyle="bold"
-                        android:textColor="#4CAF50"
+                        android:textColor="@color/vanaspati_primary"
                         android:textSize="18sp"/>
 
                     <View android:layout_width="40dp" android:layout_height="2dp"
@@ -96,7 +96,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#E8F5E9"
+                    android:background="@color/white"
                     android:orientation="vertical"
                     android:padding="16dp">
 
@@ -137,7 +137,7 @@
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 app:cornerRadius="30dp"
-                android:backgroundTint="#4CAF50"
+                android:backgroundTint="@color/vanaspati_primary"
                 app:icon="@android:drawable/ic_menu_edit" />
 
         </LinearLayout>
