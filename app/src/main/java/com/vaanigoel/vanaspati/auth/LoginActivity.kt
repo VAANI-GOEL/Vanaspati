@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.vaanigoel.vanaspati.HomeDashboard
 import com.vaanigoel.vanaspati.R
 import com.vaanigoel.vanaspati.profile.ProfileActivity
 import com.vaanigoel.vanaspati.utils.PrefsManager
@@ -72,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                 } else {
                     // Already set up, go to Profile
-                    val intent = Intent(this, ProfileActivity::class.java)
+                    val intent = Intent(this, HomeDashboard::class.java)
                     intent.putExtra("username", "Vaani") // You can later replace this with the actual user name
                     startActivity(intent)
                 }
