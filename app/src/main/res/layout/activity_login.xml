@@ -7,7 +7,9 @@
     android:background="@null"
     android:fillViewport="true">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#8ECA90"
@@ -27,7 +29,7 @@
                 android:layout_gravity="center"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/plant_grow" />
+                app:lottie_rawRes="@raw/plant_animation" />
         </FrameLayout>
 
         <TextView

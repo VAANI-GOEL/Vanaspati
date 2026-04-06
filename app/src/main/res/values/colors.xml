@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="my_leaf_green">#4CAF50 </color>
+    <color name="vanaspati_bg">#0A1A0A</color>
+    <color name="vanaspati_primary">#4CAF50</color>
+    <color name="vanaspati_accent">#81C784</color>
+    <color name="white">#FFFFFF</color>
 </resources>
