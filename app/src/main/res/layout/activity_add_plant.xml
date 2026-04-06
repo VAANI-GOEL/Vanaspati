@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:layout_marginTop="244dp"
-        android:text="Take Photo"
+        android:text="@string/take_photo"
         app:layout_constraintEnd_toStartOf="@+id/btnGallery"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageView" />
@@ -35,7 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="Choose image from Gallery"
+        android:text="@string/choose_image_from_gallery"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnCamera"
         app:layout_constraintTop_toBottomOf="@id/imageView" />
@@ -50,7 +50,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/my_leaf_green"
-        android:text="Identify Plant with AI"
+        android:text="@string/identify_plant_with_ai"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

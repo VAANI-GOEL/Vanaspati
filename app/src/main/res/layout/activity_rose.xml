@@ -18,7 +18,7 @@
             <Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:title="Grower's Boutique" />
+                android:title="@string/grower_s_boutique" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/btnProfile"
@@ -69,7 +69,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rose Care Cheat Sheet"
+                        android:text="@string/rose_care_cheat_sheet"
                         android:textStyle="bold"
                         android:textColor="@color/vanaspati_primary"
                         android:textSize="18sp"/>
@@ -103,7 +103,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Kitchen Fertilizer Recipes"
+                        android:text="@string/kitchen_fertilizer_recipes"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -120,7 +120,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Essential Rose Armor"
+                android:text="@string/essential_rose_armor"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp"/>
@@ -133,7 +133,7 @@
                 android:layout_height="60dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="40dp"
-                android:text="Review Growth Progress"
+                android:text="@string/review_growth_progress"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 app:cornerRadius="30dp"
