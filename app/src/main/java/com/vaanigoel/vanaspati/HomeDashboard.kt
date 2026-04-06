@@ -19,7 +19,7 @@ class HomeDashboard : AppCompatActivity() {
         setContentView(binding.root)
 
         // 1. Setup the Data (No need for "My Plants" as an item anymore)
-        val plants = arrayOf("Rose", "Money Plant", "Aloe Vera")
+        val plants = arrayOf("Rose")
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, plants)
 
         // 2. Attach adapter to the AutoCompleteTextView
