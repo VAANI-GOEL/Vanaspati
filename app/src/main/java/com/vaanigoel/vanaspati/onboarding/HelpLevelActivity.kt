@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.vaanigoel.vanaspati.HomeDashboard
 import com.vaanigoel.vanaspati.R
 import com.vaanigoel.vanaspati.profile.ProfileActivity
 import com.vaanigoel.vanaspati.utils.PrefsManager
@@ -32,7 +33,7 @@ class HelpLevelActivity : AppCompatActivity() {
         prefs.setFirstLogin(false)
 
         // 3. Move to the Profile
-        val intent = Intent(this, ProfileActivity::class.java)
+        val intent = Intent(this, HomeDashboard::class.java)
         intent.putExtra("username", "Vaani") // Using your default name logic
         startActivity(intent)
         finish()

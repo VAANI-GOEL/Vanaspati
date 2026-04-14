@@ -21,4 +21,21 @@
     <string name="beginner_simple_tips">🌱 Beginner (Simple tips)</string>
     <string name="how_much_help_do_you_want">How much help do you want?</string>
     <string name="profile_header_format">%1$s\n%2$s | %3$s</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="choose_image_from_gallery">Choose image from Gallery</string>
+    <string name="identify_plant_with_ai">Identify Plant with AI</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="password">Password</string>
+    <string name="email_address">Email Address</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="register_now">Register Now</string>
+    <string name="sun_symbol">☀️</string>
+    <string name="water_symbol">💧</string>
+    <string name="leaff_symbol">🌱</string>
+    <string name="rose_care_cheat_sheet">Rose Care Cheat Sheet</string>
+    <string name="kitchen_fertilizer_recipes">Kitchen Fertilizer Recipes</string>
+    <string name="essential_rose_armor">Essential Rose Armor</string>
+    <string name="grower_s_boutique">Grower\'s Boutique</string>
+    <string name="review_growth_progress">Review Growth Progress</string>
 </resources>
