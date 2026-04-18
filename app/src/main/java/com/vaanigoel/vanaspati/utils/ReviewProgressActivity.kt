@@ -88,7 +88,7 @@ class ReviewProgressActivity : AppCompatActivity() {
         val dataUrl = "data:image/jpeg;base64,$base64Image"
 
         lifecycleScope.launch(Dispatchers.IO) {
-            Log.d("API_KEY_CHECK", "Key = '${BuildConfig.OPENROUTER_API_KEY}'")
+            Log.d("API_KEY_CHECK", "Key = '${BuildConfig.API_KEY}'")
             val result = runCatching {
                 val request = OllamaRequest(
                     model = currentModel,
@@ -119,7 +119,7 @@ class ReviewProgressActivity : AppCompatActivity() {
                 )
 
                 RetrofitClient.instance.checkPlantHealth(
-                    "Bearer ${BuildConfig.OPENROUTER_API_KEY}",
+                    "Bearer ${BuildConfig.API_KEY}",
                     request
                 )
             }
