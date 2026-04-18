@@ -28,6 +28,8 @@ class ReviewProgressActivity : AppCompatActivity() {
 
     // Shuffled once per launch so all users don't hammer model[0] simultaneously
     private val modelPriorityList = mutableListOf(
+        "google/gemma-4-31b-it:free",
+        "google/gemma-4-26b-a4b-it:free",
         "google/gemma-3-27b-it:free",
         "google/gemma-3n-e4b-it:free",
         "google/gemma-3-12b-it:free"
