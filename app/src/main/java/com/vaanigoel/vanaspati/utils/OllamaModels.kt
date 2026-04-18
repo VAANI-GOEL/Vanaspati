@@ -16,7 +16,7 @@ data class OllamaRequest(
 
 data class OllamaOptions(
     @SerializedName("num_predict")
-    val numPredict: Int = 200,
+    val numPredict: Int = 300,
     val temperature: Float = 0.4f
 )
 

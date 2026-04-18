@@ -1,27 +1,37 @@
 package com.vaanigoel.vanaspati.utils
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
+
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.vaanigoel.vanaspati.databinding.ActivityReviewProgressBinding
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 class ReviewProgressActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityReviewProgressBinding
+    private var photoUri: Uri? = null
     private var selectedBitmap: Bitmap? = null
 
-    private val takePhotoLauncher = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
-        bitmap?.let {
-            val scaled = Bitmap.createScaledBitmap(it, 1024, 1024, true)
+    private val takePhotoLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success && photoUri != null) {
+            val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(photoUri!!))
+            val scaled = Bitmap.createScaledBitmap(bitmap, 1024, 1024, true)
             binding.ivPlantPreview.setImageBitmap(scaled)
             selectedBitmap = scaled
         }
@@ -32,7 +42,12 @@ class ReviewProgressActivity : AppCompatActivity() {
         binding = ActivityReviewProgressBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnCapturePhoto.setOnClickListener { takePhotoLauncher.launch(null) }
+        binding.btnCapturePhoto.setOnClickListener {
+            val photoFile = File.createTempFile("plant_capture", ".jpg", cacheDir)
+            photoUri = FileProvider.getUriForFile(this, "${packageName}.provider", photoFile)
+            takePhotoLauncher.launch(photoUri)
+        }
+
         binding.btnCheckHealth.setOnClickListener {
             selectedBitmap?.let { analyzePlant(it) }
         }
@@ -40,68 +55,81 @@ class ReviewProgressActivity : AppCompatActivity() {
 
     private fun analyzePlant(bitmap: Bitmap) {
         lifecycleScope.launch(Dispatchers.IO) {
-
             withContext(Dispatchers.Main) {
                 binding.progressBar.visibility = View.VISIBLE
-                binding.tvResponse.text = "Analyzing plant..."
+                // Better UI feedback for the presentation
+                binding.tvResponse.text = "Initializing Neural Engine & Scanning Symptoms..."
             }
 
             try {
-                // 🌿 STEP 1: PlantNet API
-                val imagePart = bitmapToMultipart(bitmap)
-
-                val plantResponse = PlantNetClient.instance.identifyPlant(
-                    images = listOf(imagePart),
-                    organs = "leaf".toRequestBody("text/plain".toMediaType()),
-                    apiKey = "YOUR_API_KEY"
-                )
-
-                val bestMatch = plantResponse.body()?.results?.firstOrNull()
-
-                val plantName = bestMatch?.species?.commonNames?.firstOrNull()
-                    ?: bestMatch?.species?.scientificNameWithoutAuthor
-                    ?: "Unknown Plant"
-
-                val confidence = bestMatch?.score?.times(100)?.toInt() ?: 0
-
-                // 🤖 STEP 2: Ollama for tips
                 val base64Image = encodeImage(bitmap)
 
+                // 🌿 THE SMART PROMPT: Forces LLaVA to think like a pathologist
+                val smartPrompt = """
+                    [SYSTEM: ACT AS AN EXPERT BOTANICAL PATHOLOGIST]
+    
+    TASK: Analyze the provided image to identify the plant and diagnose its health status.
+    
+    THINK STEP-BY-STEP:
+    1. Scan the image for the primary plant species.
+    2. Examine the leaves for patterns: chlorosis (yellowing), necrosis (browning), spots, or curling.
+    3. Look for environmental clues (soil moisture, pot size, light direction).
+    
+    OUTPUT FORMAT (Strictly follow this):
+    1. **VISUAL SIGNS**:
+       - [Bullet points describing specific leaf/stem observations]
+    2. **DIAGNOSIS**: [Identify the single most likely issue: Overwatering, Underwatering, Pests, or Nutrient Deficiency]
+    3. **SOLUTION**:
+       - [Action 1: Immediate fix]
+       - [Action 2: Long-term care adjustment]
+       - [Action 3: Professional tip]
+    
+    [TONE: Clinical, expert, yet easy for a home gardener to understand. Be extremely concise.]
+                """.trimIndent()
+
                 val ollamaRequest = OllamaRequest(
-                    prompt = "The plant is $plantName. Give exactly 2 simple care tips.",
+                    model = "llava:latest",
+                    prompt = smartPrompt, // Use the smart prompt here
                     images = listOf(base64Image)
                 )
 
                 val ollamaResponse = RetrofitClient.instance.checkPlantHealth(ollamaRequest)
 
                 withContext(Dispatchers.Main) {
+                    if (ollamaResponse.isSuccessful) {
+                        val body = ollamaResponse.body()
+                        val solution = body?.response ?: body?.message?.content ?: "Could not analyze health."
 
-                    val tips = if (ollamaResponse.isSuccessful && ollamaResponse.body() != null) {
-                        val body = ollamaResponse.body()!!
-                        body.response ?: body.message?.content ?: "No tips generated"
+                        // Added a 🌱 emoji to make the output look more like a premium app
+                        binding.tvResponse.text = "🌱 VANASPATI HEALTH REPORT:\n\n$solution"
                     } else {
-                        "Error getting tips"
+                        // Helpful error for the demo
+                        binding.tvResponse.text = "⚠️ Mac Connection Error: Ensure Ollama is running and OLLAMA_HOST is set."
                     }
-
-                    binding.tvResponse.text = """
-🌱 Plant: $plantName
-$tips
-                """.trimIndent()
-
                     binding.progressBar.visibility = View.GONE
                 }
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    binding.tvResponse.text = "Error: ${e.localizedMessage}"
+                    binding.tvResponse.text = "Error: Check if Mac & Phone are on same Wi-Fi."
                     binding.progressBar.visibility = View.GONE
                 }
             }
         }
     }
-}
-private fun encodeImage(bitmap: Bitmap): String {
-    val stream = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream)
-    return Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
+    // --- Helper Functions Moved Here for Better Scoping ---
+
+    private fun encodeImage(bitmap: Bitmap): String {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream)
+        return Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
+    }
+
+    private fun bitmapToMultipart(bitmap: Bitmap): MultipartBody.Part {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream)
+        val byteArray = stream.toByteArray()
+        val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), byteArray)
+        return MultipartBody.Part.createFormData("images", "plant.jpg", requestBody)
+    }
 }

@@ -6,12 +6,11 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface PlantNetApi {
-
     @Multipart
     @POST("v2/identify/all")
     suspend fun identifyPlant(
-        @Part images: List<MultipartBody.Part>,
-        @Part("organs") organs: RequestBody,
-        @Query("api-key") apiKey: String
+        @Query("api-key") apiKey: String,
+        @Part images: List<MultipartBody.Part>, // Must match 'images' in Activity
+        @Part("organs") organs: RequestBody      // Must match 'organs' in Activity
     ): Response<PlantNetResponse>
 }

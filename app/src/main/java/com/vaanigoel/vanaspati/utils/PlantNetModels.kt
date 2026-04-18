@@ -1,15 +1,22 @@
 package com.vaanigoel.vanaspati.utils
 
+import com.google.gson.annotations.SerializedName
+
 data class PlantNetResponse(
-    val results: List<Result>
+    @SerializedName("results")
+    val results: List<PlantResult>
 )
 
-data class Result(
-    val species: Species,
+data class PlantResult(
+    @SerializedName("species")
+    val species: PlantSpecies,
+    @SerializedName("score")
     val score: Double
 )
 
-data class Species(
+data class PlantSpecies(
+    @SerializedName("scientificNameWithoutAuthor")
     val scientificNameWithoutAuthor: String,
+    @SerializedName("commonNames")
     val commonNames: List<String>?
 )
