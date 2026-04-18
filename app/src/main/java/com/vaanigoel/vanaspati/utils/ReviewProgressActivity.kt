@@ -57,61 +57,50 @@ class ReviewProgressActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) {
                 binding.progressBar.visibility = View.VISIBLE
-                // Better UI feedback for the presentation
-                binding.tvResponse.text = "Initializing Neural Engine & Scanning Symptoms..."
+                binding.tvResponse.text = "Cloud AI is diagnosing symptoms..."
             }
 
             try {
                 val base64Image = encodeImage(bitmap)
+                // Cloud APIs need the "data:image" prefix
+                val dataUrl = "data:image/jpeg;base64,$base64Image"
 
-                // 🌿 THE SMART PROMPT: Forces LLaVA to think like a pathologist
-                val smartPrompt = """
-                    [SYSTEM: ACT AS AN EXPERT BOTANICAL PATHOLOGIST]
-    
-    TASK: Analyze the provided image to identify the plant and diagnose its health status.
-    
-    THINK STEP-BY-STEP:
-    1. Scan the image for the primary plant species.
-    2. Examine the leaves for patterns: chlorosis (yellowing), necrosis (browning), spots, or curling.
-    3. Look for environmental clues (soil moisture, pot size, light direction).
-    
-    OUTPUT FORMAT (Strictly follow this):
-    1. **VISUAL SIGNS**:
-       - [Bullet points describing specific leaf/stem observations]
-    2. **DIAGNOSIS**: [Identify the single most likely issue: Overwatering, Underwatering, Pests, or Nutrient Deficiency]
-    3. **SOLUTION**:
-       - [Action 1: Immediate fix]
-       - [Action 2: Long-term care adjustment]
-       - [Action 3: Professional tip]
-    
-    [TONE: Clinical, expert, yet easy for a home gardener to understand. Be extremely concise.]
-                """.trimIndent()
-
-                val ollamaRequest = OllamaRequest(
-                    model = "llava:latest",
-                    prompt = smartPrompt, // Use the smart prompt here
-                    images = listOf(base64Image)
+                // Constructing the message with your Smart Prompt
+                val message = OllamaMessage(
+                    content = listOf(
+                        OllamaContent(type = "text", text = """
+                        Identify this plant and perform a clinical health check.
+                        1. Plant Name: [Common Name]
+                        2. VISUAL SIGNS: Describe color patterns and edges.
+                        3. DIAGNOSIS: Overwatering, Underwatering, Pests, or Deficiency.
+                        4. SOLUTION: Give 3 professional steps.
+                        Format with bold headers. Be concise.
+                    """.trimIndent()),
+                        OllamaContent(type = "image_url", imageUrl = OllamaImageUrl(dataUrl))
+                    )
                 )
 
-                val ollamaResponse = RetrofitClient.instance.checkPlantHealth(ollamaRequest)
+                val request = OllamaRequest(messages = listOf(message))
+
+                // Replace with your actual OpenRouter Key
+                val response = RetrofitClient.instance.checkPlantHealth(
+                    "Bearer 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",
+                    request
+                )
 
                 withContext(Dispatchers.Main) {
-                    if (ollamaResponse.isSuccessful) {
-                        val body = ollamaResponse.body()
-                        val solution = body?.response ?: body?.message?.content ?: "Could not analyze health."
-
-                        // Added a 🌱 emoji to make the output look more like a premium app
-                        binding.tvResponse.text = "🌱 VANASPATI HEALTH REPORT:\n\n$solution"
+                    if (response.isSuccessful) {
+                        val solution = response.body()?.choices?.firstOrNull()?.message?.content
+                        binding.tvResponse.text = solution ?: "Analysis failed."
                     } else {
-                        // Helpful error for the demo
-                        binding.tvResponse.text = "⚠️ Mac Connection Error: Ensure Ollama is running and OLLAMA_HOST is set."
+                        binding.tvResponse.text = "Error: Quota reached or API issue."
                     }
                     binding.progressBar.visibility = View.GONE
                 }
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    binding.tvResponse.text = "Error: Check if Mac & Phone are on same Wi-Fi."
+                    binding.tvResponse.text = "Error: ${e.localizedMessage}"
                     binding.progressBar.visibility = View.GONE
                 }
             }
