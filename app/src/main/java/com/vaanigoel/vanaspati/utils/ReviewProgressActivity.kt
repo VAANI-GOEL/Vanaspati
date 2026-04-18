@@ -4,21 +4,18 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
 import android.view.View
+import android.util.Base64
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
+import com.vaanigoel.vanaspati.BuildConfig
 import com.vaanigoel.vanaspati.databinding.ActivityReviewProgressBinding
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -27,15 +24,28 @@ class ReviewProgressActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReviewProgressBinding
     private var photoUri: Uri? = null
     private var selectedBitmap: Bitmap? = null
+    private var isAnalyzing = false
 
-    private val takePhotoLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success && photoUri != null) {
-            val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(photoUri!!))
-            val scaled = Bitmap.createScaledBitmap(bitmap, 1024, 1024, true)
-            binding.ivPlantPreview.setImageBitmap(scaled)
-            selectedBitmap = scaled
+    // Shuffled once per launch so all users don't hammer model[0] simultaneously
+    private val modelPriorityList = mutableListOf(
+        "google/gemma-3-27b-it:free",
+        "google/gemini-2.0-flash-exp:free",
+        "nvidia/nemotron-3-nano-30b-a3b:free",
+        "meta-llama/llama-4-maverick:free",
+        "mistralai/mistral-small-3.1-24b-instruct:free"
+    ).also { it.shuffle() }
+
+    private val takePhotoLauncher =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success && photoUri != null) {
+                val raw = BitmapFactory.decodeStream(contentResolver.openInputStream(photoUri!!))
+                val scaled = scaleBitmap(raw)
+                binding.ivPlantPreview.setImageBitmap(scaled)
+                // Recycle old bitmap before replacing
+                selectedBitmap?.recycle()
+                selectedBitmap = scaled
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,64 +59,125 @@ class ReviewProgressActivity : AppCompatActivity() {
         }
 
         binding.btnCheckHealth.setOnClickListener {
-            selectedBitmap?.let { analyzePlant(it) }
+            if (!isAnalyzing) {
+                selectedBitmap?.let {
+                    setLoadingState(true)
+                    binding.tvResponse.text = ""
+                    analyzePlant(it)
+                } ?: run {
+                    binding.tvResponse.text = "Please capture a photo first."
+                }
+            }
         }
     }
 
-    private fun analyzePlant(bitmap: Bitmap) {
+    private fun analyzePlant(bitmap: Bitmap, modelIndex: Int = 0) {
+        // All models exhausted
+        if (modelIndex >= modelPriorityList.size) {
+            setLoadingState(false)
+            binding.tvResponse.text =
+                "All AI engines are currently busy. Please try again in a moment."
+            return
+        }
+
+        val currentModel = modelPriorityList[modelIndex]
+        val totalModels = modelPriorityList.size
+        binding.tvResponse.text = "Trying engine ${modelIndex + 1} of $totalModels…"
+
+        val base64Image = encodeImage(bitmap)
+        val dataUrl = "data:image/jpeg;base64,$base64Image"
+
         lifecycleScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) {
-                binding.progressBar.visibility = View.VISIBLE
-                binding.tvResponse.text = "Cloud AI is diagnosing symptoms..."
-            }
-
-            try {
-                val base64Image = encodeImage(bitmap)
-                // Cloud APIs need the "data:image" prefix
-                val dataUrl = "data:image/jpeg;base64,$base64Image"
-
-                // Constructing the message with your Smart Prompt
-                val message = OllamaMessage(
-                    content = listOf(
-                        OllamaContent(type = "text", text = """
-                        Identify this plant and perform a clinical health check.
-                        1. Plant Name: [Common Name]
-                        2. VISUAL SIGNS: Describe color patterns and edges.
-                        3. DIAGNOSIS: Overwatering, Underwatering, Pests, or Deficiency.
-                        4. SOLUTION: Give 3 professional steps.
-                        Format with bold headers. Be concise.
-                    """.trimIndent()),
-                        OllamaContent(type = "image_url", imageUrl = OllamaImageUrl(dataUrl))
+            Log.d("API_KEY_CHECK", "Key = '${BuildConfig.OPENROUTER_API_KEY}'")
+            val result = runCatching {
+                val request = OllamaRequest(
+                    model = currentModel,
+                    messages = listOf(
+                        OllamaMessage(
+                            role = "user",
+                            content = listOf(
+                                OllamaContent(
+                                    type = "text",
+                                    text = """
+                                        You are a botanist and plant health expert.
+                                        Analyze this plant image and provide:
+                                        1. Plant name (common + scientific)
+                                        2. Health status (Healthy / Mild Issue / Severe Issue)
+                                        3. Visible symptoms (if any)
+                                        4. Likely cause
+                                        5. Recommended treatment
+                                        Be concise and practical.
+                                    """.trimIndent()
+                                ),
+                                OllamaContent(
+                                    type = "image_url",
+                                    imageUrl = OllamaImageUrl(dataUrl)
+                                )
+                            )
+                        )
                     )
                 )
 
-                val request = OllamaRequest(messages = listOf(message))
-
-                // Replace with your actual OpenRouter Key
-                val response = RetrofitClient.instance.checkPlantHealth(
-                    "Bearer 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",
+                RetrofitClient.instance.checkPlantHealth(
+                    "Bearer ${BuildConfig.OPENROUTER_API_KEY}",
                     request
                 )
+            }
 
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        val solution = response.body()?.choices?.firstOrNull()?.message?.content
-                        binding.tvResponse.text = solution ?: "Analysis failed."
-                    } else {
-                        binding.tvResponse.text = "Error: Quota reached or API issue."
+            withContext(Dispatchers.Main) {
+                val response = result.getOrNull()
+                when {
+                    // Network error or exception — try next
+                    response == null -> {
+                        analyzePlant(bitmap, modelIndex + 1)
                     }
-                    binding.progressBar.visibility = View.GONE
-                }
 
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    binding.tvResponse.text = "Error: ${e.localizedMessage}"
-                    binding.progressBar.visibility = View.GONE
+                    // Success
+                    response.isSuccessful -> {
+                        val content = response.body()
+                            ?.choices
+                            ?.getOrNull(0)
+                            ?.message
+                            ?.content
+                            ?.trim()
+
+                        setLoadingState(false)
+                        binding.tvResponse.text = if (!content.isNullOrBlank()) {
+                            content
+                        } else {
+                            "No response received. Please try again."
+                        }
+                    }
+
+                    // Rate limit or overload — try next model
+                    response.code() == 429 || response.code() == 503 -> {
+                        analyzePlant(bitmap, modelIndex + 1)
+                    }
+
+                    // Hard error — don't retry
+                    else -> {
+                        setLoadingState(false)
+                        binding.tvResponse.text =
+                            "Error ${response.code()}: ${response.message()}. Please try again."
+                    }
                 }
             }
         }
     }
-    // --- Helper Functions Moved Here for Better Scoping ---
+
+    // Scale down preserving aspect ratio — avoids distortion and OOM
+    private fun scaleBitmap(bitmap: Bitmap, maxDim: Int = 1024): Bitmap {
+        val ratio = minOf(
+            maxDim.toFloat() / bitmap.width,
+            maxDim.toFloat() / bitmap.height
+        )
+        if (ratio >= 1f) return bitmap
+        val w = (bitmap.width * ratio).toInt()
+        val h = (bitmap.height * ratio).toInt()
+        return Bitmap.createScaledBitmap(bitmap, w, h, true).also {
+            if (it !== bitmap) bitmap.recycle()
+        }
+    }
 
     private fun encodeImage(bitmap: Bitmap): String {
         val stream = ByteArrayOutputStream()
@@ -114,11 +185,16 @@ class ReviewProgressActivity : AppCompatActivity() {
         return Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
     }
 
-    private fun bitmapToMultipart(bitmap: Bitmap): MultipartBody.Part {
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream)
-        val byteArray = stream.toByteArray()
-        val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), byteArray)
-        return MultipartBody.Part.createFormData("images", "plant.jpg", requestBody)
+    private fun setLoadingState(loading: Boolean) {
+        isAnalyzing = loading
+        binding.btnCheckHealth.isEnabled = !loading
+        binding.btnCapturePhoto.isEnabled = !loading
+        binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        selectedBitmap?.recycle()
+        selectedBitmap = null
     }
 }

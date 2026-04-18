@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 data class OllamaRequest(
 
-    val model: String = "google/gemma-3-27b-it:free", // Free Cloud Vision Model
+    val model: String , // Free Cloud Vision Model
     val messages: List<OllamaMessage>
 )
 

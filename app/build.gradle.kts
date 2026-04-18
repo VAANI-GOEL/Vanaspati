@@ -1,6 +1,12 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+}
+
+val localProps = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -18,12 +24,14 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-        val apiKey = project.findProperty("api_key") as String? ?: ""
-        buildConfigField("String", "API_KEY", "\"$apiKey\"")
+        buildConfigField(
+            "String",
+            "OPENROUTER_API_KEY",
+            "\"${localProps["OPENROUTER_API_KEY"]}\""
+        )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
 
     buildTypes {
         release {
@@ -49,14 +57,11 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("com.airbnb.android:lottie:6.0.0")
 
-    // Retrofit for network calls
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
-    // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
 
-    // Lifecycle (for coroutines)
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
     implementation("androidx.cardview:cardview:1.0.0")
