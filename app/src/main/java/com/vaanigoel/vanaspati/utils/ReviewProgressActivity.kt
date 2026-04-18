@@ -29,10 +29,8 @@ class ReviewProgressActivity : AppCompatActivity() {
     // Shuffled once per launch so all users don't hammer model[0] simultaneously
     private val modelPriorityList = mutableListOf(
         "google/gemma-3-27b-it:free",
-        "google/gemini-2.0-flash-exp:free",
-        "nvidia/nemotron-3-nano-30b-a3b:free",
-        "meta-llama/llama-4-maverick:free",
-        "mistralai/mistral-small-3.1-24b-instruct:free"
+        "google/gemma-3n-e4b-it:free",
+        "google/gemma-3-12b-it:free"
     ).also { it.shuffle() }
 
     private val takePhotoLauncher =
@@ -89,7 +87,12 @@ class ReviewProgressActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             Log.d("API_KEY_CHECK", "Key = '${BuildConfig.OPENROUTER_API_KEY}'")
-            val result = runCatching {
+            Log.d("API_DEBUG", "Calling model: $currentModel")
+
+            try {
+                val base64Image = encodeImage(bitmap)
+                val dataUrl = "data:image/jpeg;base64,$base64Image"
+
                 val request = OllamaRequest(
                     model = currentModel,
                     messages = listOf(
@@ -98,16 +101,7 @@ class ReviewProgressActivity : AppCompatActivity() {
                             content = listOf(
                                 OllamaContent(
                                     type = "text",
-                                    text = """
-                                        You are a botanist and plant health expert.
-                                        Analyze this plant image and provide:
-                                        1. Plant name (common + scientific)
-                                        2. Health status (Healthy / Mild Issue / Severe Issue)
-                                        3. Visible symptoms (if any)
-                                        4. Likely cause
-                                        5. Recommended treatment
-                                        Be concise and practical.
-                                    """.trimIndent()
+                                    text = "Identify this plant and check its health."
                                 ),
                                 OllamaContent(
                                     type = "image_url",
@@ -118,48 +112,53 @@ class ReviewProgressActivity : AppCompatActivity() {
                     )
                 )
 
-                RetrofitClient.instance.checkPlantHealth(
+                val response = RetrofitClient.instance.checkPlantHealth(
                     "Bearer ${BuildConfig.OPENROUTER_API_KEY}",
                     request
                 )
-            }
 
-            withContext(Dispatchers.Main) {
-                val response = result.getOrNull()
-                when {
-                    // Network error or exception — try next
-                    response == null -> {
-                        analyzePlant(bitmap, modelIndex + 1)
-                    }
+                Log.d("API_DEBUG", "Response code: ${response.code()}")
+                Log.d("API_DEBUG", "Response body: ${response.errorBody()?.string()}")
 
-                    // Success
-                    response.isSuccessful -> {
-                        val content = response.body()
-                            ?.choices
-                            ?.getOrNull(0)
-                            ?.message
-                            ?.content
-                            ?.trim()
-
-                        setLoadingState(false)
-                        binding.tvResponse.text = if (!content.isNullOrBlank()) {
-                            content
-                        } else {
-                            "No response received. Please try again."
+                withContext(Dispatchers.Main) {
+                    when {
+                        response.isSuccessful -> {
+                            val content = response.body()
+                                ?.choices
+                                ?.getOrNull(0)
+                                ?.message
+                                ?.content
+                                ?.trim()
+                            setLoadingState(false)
+                            binding.tvResponse.text = if (!content.isNullOrBlank()) content
+                            else "No response received."
+                        }
+                        // Rate limit, overload, OR no endpoints — try next model
+                        response.code() == 429 || response.code() == 503 || response.code() == 404 -> {
+                            Log.d("API_DEBUG", "Code ${response.code()} on $currentModel — trying next")
+                            analyzePlant(bitmap, modelIndex + 1)
+                        }
+                        else -> {
+                            setLoadingState(false)
+                            val errorBody = response.errorBody()?.string()
+                            Log.e("API_ERROR", "Code: ${response.code()}, Body: $errorBody")
+                            // Show full error on screen so you can read it
+                            binding.tvResponse.text = "Code ${response.code()}\n\n$errorBody"
                         }
                     }
+                }
 
-                    // Rate limit or overload — try next model
-                    response.code() == 429 || response.code() == 503 -> {
-                        analyzePlant(bitmap, modelIndex + 1)
-                    }
+            } catch (e: Exception) {
+                // This will now show the REAL error
+                Log.e("API_EXCEPTION", "Type: ${e.javaClass.simpleName}")
+                Log.e("API_EXCEPTION", "Message: ${e.message}")
+                Log.e("API_EXCEPTION", "Cause: ${e.cause}")
+                e.printStackTrace()
 
-                    // Hard error — don't retry
-                    else -> {
-                        setLoadingState(false)
-                        binding.tvResponse.text =
-                            "Error ${response.code()}: ${response.message()}. Please try again."
-                    }
+                withContext(Dispatchers.Main) {
+                    setLoadingState(false)
+                    // Show exception directly on screen
+                    binding.tvResponse.text = "${e.javaClass.simpleName}:\n${e.message}"
                 }
             }
         }

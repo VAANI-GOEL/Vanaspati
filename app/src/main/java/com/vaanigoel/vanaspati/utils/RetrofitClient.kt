@@ -9,10 +9,18 @@ object RetrofitClient {
     // --- CHANGED: Now pointing to the global OpenRouter Cloud API ---
     private const val BASE_URL = "https://openrouter.ai/api/v1/"
 
+    // In RetrofitClient.kt, update okHttpClient:
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(60, TimeUnit.SECONDS)
         .readTimeout(60, TimeUnit.SECONDS)
-        .writeTimeout(60, TimeUnit.SECONDS) // Added write timeout for large image uploads
+        .writeTimeout(60, TimeUnit.SECONDS)
+        .addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                .addHeader("HTTP-Referer", "https://vanaspati.app")  // your app name
+                .addHeader("X-Title", "Vanaspati")                   // your app name
+                .build()
+            chain.proceed(request)
+        }
         .build()
 
     val instance: OllamaApi by lazy {
