@@ -6,11 +6,21 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.X.X:11434/" // Double check this IP!
+    // --- CHANGED: Now pointing to the global OpenRouter Cloud API ---
+    private const val BASE_URL = "https://openrouter.ai/api/v1/"
 
+    // In RetrofitClient.kt, update okHttpClient:
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(60, TimeUnit.SECONDS)
         .readTimeout(60, TimeUnit.SECONDS)
+        .writeTimeout(60, TimeUnit.SECONDS)
+        .addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                .addHeader("HTTP-Referer", "https://vanaspati.app")  // your app name
+                .addHeader("X-Title", "Vanaspati")                   // your app name
+                .build()
+            chain.proceed(request)
+        }
         .build()
 
     val instance: OllamaApi by lazy {
