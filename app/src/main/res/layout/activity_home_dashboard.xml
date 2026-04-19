@@ -56,28 +56,28 @@
             android:shadowColor="#4AC34A"
             android:text="Add Plant 🌱" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/menuPlants"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:hint="Select Your Plant"
-            app:boxCornerRadiusTopStart="8dp"
-            app:boxCornerRadiusTopEnd="8dp"
-            app:boxCornerRadiusBottomStart="8dp"
-            app:boxCornerRadiusBottomEnd="8dp"
-            app:boxStrokeColor="#2D5A27"
-            app:hintTextColor="#2D5A27">
+<!--       <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/menuPlants"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="20dp"-->
+<!--            android:hint="Select Your Plant"-->
+<!--            app:boxCornerRadiusTopStart="8dp"-->
+<!--            app:boxCornerRadiusTopEnd="8dp"-->
+<!--            app:boxCornerRadiusBottomStart="8dp"-->
+<!--            app:boxCornerRadiusBottomEnd="8dp"-->
+<!--            app:boxStrokeColor="#2D5A27"-->
+<!--            app:hintTextColor="#2D5A27">-->
 
-            <AutoCompleteTextView
-                android:id="@+id/autoCompletePlants"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:padding="16dp" />
+<!--            <AutoCompleteTextView-->
+<!--                android:id="@+id/autoCompletePlants"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:inputType="none"-->
+<!--                android:padding="16dp" />-->
 
-        </com.google.android.material.textfield.TextInputLayout>
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
 
 
     </LinearLayout>
