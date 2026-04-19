@@ -28,11 +28,12 @@ class ReviewProgressActivity : AppCompatActivity() {
 
     // Shuffled once per launch so all users don't hammer model[0] simultaneously
     private val modelPriorityList = mutableListOf(
-        "google/gemma-4-31b-it:free",
-        "google/gemma-4-26b-a4b-it:free",
-        "google/gemma-3-27b-it:free",
-        "google/gemma-3n-e4b-it:free",
-        "google/gemma-3-12b-it:free"
+        "google/gemma-4-31b-it:free",              // Priority 1: Best Vision
+        "google/gemma-4-26b-a4b-it:free",          // Priority 2: Very fast MoE Vision
+        "google/gemma-3-27b-it:free",              // Priority 3: Stable standard
+        "nvidia/nemotron-nano-12b-v2-vl:free",     // Priority 4: Specialized Image model
+        "google/gemma-3-12b-it:free"            // Priority 5: High-speed backup
+
     ).also { it.shuffle() }
 
     private val takePhotoLauncher =
