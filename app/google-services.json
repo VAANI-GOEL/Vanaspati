@@ -12,7 +12,12 @@
           "package_name": "com.vaanigoel.vanaspati"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "291211563788-9i2jh8tabgguekgjompbsqle7qappidt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBn-wEibx56qfnpsay1ThMOyKF7cH2qZsU"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "291211563788-9i2jh8tabgguekgjompbsqle7qappidt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
