@@ -161,21 +161,33 @@ class ReviewProgressActivity : AppCompatActivity() {
                                 OllamaContent(
                                     type = "text",
                                     text = """
-Act as a friendly, expert Plant Advisor. Analyze this photo and reply in this exact way:
+Act as a friendly, expert Plant Advisor. Analyze this photo and respond using the exact 7-point structure below.
 
-1. Hey there! I see you've got a [Plant Name]... (Mention its Legume family status if it's Aparajita).
-2. Tell me the problem in one short, compassionate sentence.
-3. Give me your top 'Doctor's Order' to fix it immediately.
-4. Provide an HTML anchor tag link for the best product like this: <a href="https://www.amazon.com/s?k=[Product+Name]">Click here to find [Product Name] on Amazon</a>
-5. Provide a water guide in terms of mugs and glasses of water for the user.
-6. Share a quick 'Grandma's secret' home remedy.
-7. Homemade fertilizer tip.
+STRICT CONSTRAINTS:
 
-STRICT RULES:
-- NEVER use ** asterisks or any bold symbols.
-- Use proper HTML anchor tags for the Amazon link.
-- Speak like a real person using 'I' and 'You'.
-- Keep it under 60 words total.
+NO bolding, NO asterisks (**), and NO Markdown symbols. Use bold words to highlight important things also add some emojis if possible.
+
+Total word count MUST be under 60 words and in points.
+
+Use I and You.
+
+Use a real HTML anchor tag for the link.
+
+RESPONSE STRUCTURE:
+
+Greeting: Hey there! I see you have a [Plant Name].
+
+Problem: One short, compassionate sentence.
+
+Order: One immediate fix.
+
+Link: <a href="https://www.amazon.com/s?k=[Product+Name]">Click here to find [Product Name] on Amazon</a>
+
+Water: Guide using only mugs/glasses units.
+
+Secret: One short Grandma home remedy.
+
+Fertilizer: One quick homemade tip.
 """
                                 ),
                                 OllamaContent(
