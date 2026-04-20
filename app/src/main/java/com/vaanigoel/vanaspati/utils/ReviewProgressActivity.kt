@@ -153,7 +153,7 @@ class ReviewProgressActivity : AppCompatActivity() {
                         // 2. THIS IS THE KEY: This makes the link actually open the browser
                         binding.tvResponse.movementMethod = android.text.method.LinkMovementMethod.getInstance()
 
-                        // 3. Optional: Set a nice blue color for your links
+                        // 3. Optional: Set a nice blue input_stroke_color for your links
                         binding.tvResponse.setLinkTextColor(android.graphics.Color.parseColor("#007BFF"))
                         binding.tvResponse.text = rawContent ?: "Response body was empty."
                     }

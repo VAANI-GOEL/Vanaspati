@@ -4,7 +4,7 @@
         android:color="#40FFFFFF"> <!-- This adds a tap effect -->
         <item>
             <shape android:shape="rectangle">
-                <!-- Matches your theme's dark green/grey shadow color -->
+                <!-- Matches your theme's dark green/grey shadow input_stroke_color -->
                 <solid android:color="#4CAF50" />
                 <corners android:radius="24dp" />
                 <padding
