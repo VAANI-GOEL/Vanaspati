@@ -100,9 +100,14 @@ class SignupActivity : AppCompatActivity() {
                                     finish()
                                 }
                                 .addOnFailureListener { e ->
-                                    btnSignup.isEnabled = true
-                                    btnSignup.text = "Create Account"
-                                    Toast.makeText(this, "Error saving profile: ${e.message}", Toast.LENGTH_LONG).show()
+
+                                    e.printStackTrace()
+
+                                    Toast.makeText(
+                                        this,
+                                        "Error: ${e.message}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 }
                         } else {
                             btnSignup.isEnabled = true
