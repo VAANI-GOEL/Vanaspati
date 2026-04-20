@@ -104,12 +104,13 @@ class LoginActivity : AppCompatActivity() {
                             )
                             finish()
                         } else {
-                            Toast.makeText(
-                                this,
-                                "Login failed: ${task.exception?.message}",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
+                    val errorCode = (task.exception as? com.google.firebase.auth.FirebaseAuthException)?.errorCode
+                    Toast.makeText(
+                        this,
+                        "Code: $errorCode\n${task.exception?.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
                     }
             }
         }
