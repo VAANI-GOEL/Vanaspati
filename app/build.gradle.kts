@@ -3,9 +3,8 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-        id("com.google.gms.google-services")
+    id("com.google.gms.google-services")
 }
-
 
 val localProps = Properties().apply {
     load(rootProject.file("local.properties").inputStream())
