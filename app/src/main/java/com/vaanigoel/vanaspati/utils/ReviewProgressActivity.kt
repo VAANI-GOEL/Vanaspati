@@ -88,12 +88,12 @@ class ReviewProgressActivity : AppCompatActivity() {
         // Exit strategy if all models fail
         if (modelIndex >= modelPriorityList.size) {
             setLoadingState(false)
-            binding.tvResponse.text = "All AI engines are busy (9:00 AM Rush). Please try in a minute."
+            binding.tvResponse.text = "Come back in some time...sorry for inconvenience❤\uFE0F\uD83D\uDE0C"
             return
         }
 
         val currentModel = modelPriorityList[modelIndex]
-        binding.tvResponse.text = "Consulting Engine ${modelIndex + 1} of ${modelPriorityList.size}..."
+        binding.tvResponse.text = "Collecting leaves and flowers for you sweetheart...pls wait for a moment \uD83C\uDF42\uD83E\uDD40"
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -115,9 +115,10 @@ class ReviewProgressActivity : AppCompatActivity() {
     1. Hey there! I see you've got a [Plant Name]... (Mention its Legume family status if it's Aparajita).
     2. Tell me the problem in one short, compassionate sentence.
     3. Give me your top 'Doctor's Order' to fix it immediately.
-    4. Provide an HTML link for the best product like this: <a href="https://www.amazon.com/s?k=[Product+Name]">Click here to find [Product Name] on Amazon</a>
-    5. Share a quick 'Grandma's secret' home remedy.
-    6.Homemade fertilizer.
+    4. Provide an HTML link for the best product like this:"https://www.amazon.com/s?k=[Product+Name]" Click here to find [Product Name] on Amazon</a>
+    5. Provide a water guide in terms of mugs and glasses of water for the user.
+    6. Share a quick 'Grandma's secret' home remedy.
+    7.Homemade fertilizer.
     STRICT RULES: 
     - NEVER use ** asterisks or any bold symbols. 
     - Use HTML tags for the link.

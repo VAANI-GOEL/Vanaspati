@@ -4,99 +4,102 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.vaanigoel.vanaspati.AddPlantActivity
-import com.vaanigoel.vanaspati.FirebaseHelper
 import com.vaanigoel.vanaspati.HomeDashboard
 import com.vaanigoel.vanaspati.R
-import com.vaanigoel.vanaspati.utils.PrefsManager
+import com.vaanigoel.vanaspati.FirebaseHelper
 
-class LoginActivity : AppCompatActivity() {
+class SignupActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Edge-to-edge UI
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_signup)
 
         // Views
+        val nameLayout = findViewById<TextInputLayout>(R.id.nameLayout)
         val emailLayout = findViewById<TextInputLayout>(R.id.emailLayout)
         val passwordLayout = findViewById<TextInputLayout>(R.id.passwordLayout)
+
+        val etName = findViewById<TextInputEditText>(R.id.etName)
         val etEmail = findViewById<TextInputEditText>(R.id.etEmail)
         val etPassword = findViewById<TextInputEditText>(R.id.etPassword)
-        val btnLogin = findViewById<Button>(R.id.btnLogin)
-        val tvRegister = findViewById<TextView>(R.id.tvRegister)
 
-        tvRegister.setOnClickListener {
+        val btnSignup = findViewById<Button>(R.id.btnSignup)
 
-            startActivity(
-                Intent(this, SignupActivity::class.java)
-            )
+        btnSignup.setOnClickListener {
 
-        }
-
-        // Prefs
-        val prefs = PrefsManager(this)
-
-        // Login Button Click
-        btnLogin.setOnClickListener {
+            val name = etName.text.toString().trim()
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
             // Reset errors
+            nameLayout.error = null
             emailLayout.error = null
             passwordLayout.error = null
 
             var isValid = true
 
-            // Email validation
-            if (email.isEmpty()) {
-                emailLayout.error = "Email is required"
-                isValid = false
-            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                emailLayout.error = "Enter a valid email"
+            // Name validation
+            if (name.isEmpty()) {
+                nameLayout.error = "Name required"
                 isValid = false
             }
 
+            // Email validation
+            if (email.isEmpty()) {
+                emailLayout.error = "Email required"
+                isValid = false
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                emailLayout.error = "Enter valid email"
+                isValid = false
+            }
 
             // Password validation
             if (password.isEmpty()) {
-                passwordLayout.error = "Password is required"
+                passwordLayout.error = "Password required"
                 isValid = false
             } else if (password.length < 6) {
                 passwordLayout.error = "Minimum 6 characters required"
                 isValid = false
             }
+
             if (isValid) {
 
-                Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Creating Account...",
+                    Toast.LENGTH_SHORT
+                ).show()
 
+                // Firebase Signup
                 FirebaseHelper.auth
-                    .signInWithEmailAndPassword(email, password)
+                    .createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
 
                         if (task.isSuccessful) {
 
-                            // Save login state
-                            prefs.setLoggedIn(true)
+                            // Save user to Firestore
+                            val user = hashMapOf(
+                                "name" to name,
+                                "email" to email
+                            )
+
+                            FirebaseHelper.db
+                                .collection("users")
+                                .add(user)
 
                             Toast.makeText(
                                 this,
-                                "Login Successful ✅",
+                                "Signup Successful ✅",
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            // Move to dashboard
-                            val intent = Intent(this, HomeDashboard::class.java)
-                            intent.putExtra("username", email)
+                            // Go to dashboard
+                            val intent =
+                                Intent(this, HomeDashboard::class.java)
                             startActivity(intent)
 
                             finish()
@@ -105,19 +108,12 @@ class LoginActivity : AppCompatActivity() {
 
                             Toast.makeText(
                                 this,
-                                "Login Failed: ${task.exception?.message}",
+                                "Signup Failed: ${task.exception?.message}",
                                 Toast.LENGTH_LONG
                             ).show()
 
                         }
                     }
-            }
-
-            // Handle system bars (padding)
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-                insets
             }
         }
     }
