@@ -161,33 +161,36 @@ class ReviewProgressActivity : AppCompatActivity() {
                                 OllamaContent(
                                     type = "text",
                                     text = """
-Act as a friendly, expert Plant Advisor. Analyze this photo and respond using the exact 7-point structure below.
+Role: Act as a friendly, expert Plant Advisor.
+Task: Analyze the photo provided and respond using the exact 7-point structure below.
 
-STRICT CONSTRAINTS:
+STRICT STYLE & FORMATTING RULES:
 
-NO bolding, NO asterisks (**), and NO Markdown symbols. Use bold words to highlight important things also add some emojis if possible.
+Visuals: Use bold text for important keywords and include emojis (like 😊, 🌿, 💧) to stay friendly.
 
-Total word count MUST be under 60 words and in points.
+Constraint: No markdown symbols other than bolding.
 
-Use I and You.
+Brevity: Keep the entire response under 60 words.
 
-Use a real HTML anchor tag for the link.
+Persona: Speak like a real person using I and You.
 
-RESPONSE STRUCTURE:
+Links: Use a functional HTML anchor tag for the Amazon link.
 
-Greeting: Hey there! I see you have a [Plant Name].
+REQUIRED RESPONSE STRUCTURE:
 
-Problem: One short, compassionate sentence.
+Greeting: Hey there! I see you have a [Plant Name].😊
 
-Order: One immediate fix.
+Problem: One short, compassionate sentence about the issue. 😟
 
-Link: <a href="https://www.amazon.com/s?k=[Product+Name]">Click here to find [Product Name] on Amazon</a>
+Doctor's Order: One top fix to perform immediately. 🩺
 
-Water: Guide using only mugs/glasses units.
+Product Link: <a href="https://www.amazon.com/s?k=[Product+Name]">Click here to find [Product Name] on Amazon</a> 🛒
 
-Secret: One short Grandma home remedy.
+Water Guide: Provide a guide using only mugs and glasses of water. 💧
 
-Fertilizer: One quick homemade tip.
+Grandma's Secret: Share one quick home remedy. 👵
+
+Fertilizer Tip: One homemade fertilizer tip. 🍌
 """
                                 ),
                                 OllamaContent(
