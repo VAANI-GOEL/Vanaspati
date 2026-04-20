@@ -21,6 +21,14 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 
 class ReviewProgressActivity : AppCompatActivity() {
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                startCamera()
+            } else {
+                Toast.makeText(this, "Camera permission is required", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     private lateinit var binding: ActivityReviewProgressBinding
     private var photoUri: Uri? = null
@@ -206,4 +214,8 @@ class ReviewProgressActivity : AppCompatActivity() {
         selectedBitmap?.recycle()
         selectedBitmap = null
     }
+}
+
+private fun ReviewProgressActivity.startCamera() {
+    TODO("Not yet implemented")
 }
