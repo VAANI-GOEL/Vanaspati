@@ -60,20 +60,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".onboarding.LanguageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".onboarding.HelpLevelActivity"
-            android:exported="false" />
-        <activity
             android:name=".HomeDashboard"
             android:exported="false" />
-        <activity
-            android:name=".profile.ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RoseActivity"
-            android:exported="false" />
+
         <activity
             android:name=".AddPlantActivity"
             android:exported="false" />
