@@ -64,12 +64,12 @@ No subscription. No expert visit. Just point your camera and get a structured, f
 
 | Login | Register | Home Dashboard |
 |:---:|:---:|:---:|
-| ![Login Screen](screenshots/Login_screen.png) | ![Register Screen](screenshots/Register_screen.png) | ![Home Screen](screenshots/Home_screen.png) |
+| ![Login Screen](Login_screen.png) | ![Register Screen](Register_screen.png) | ![Home Screen](Home_screen.png) |
 | *Firebase email/password sign-in* | *Account creation with validation* | *Personalised greeting, tips & quick-start chips* |
 
 | Add Plant | AI Search | After Analysis |
 |:---:|:---:|:---:|
-| ![Add Plant](screenshots/add_plant_screen.png) | ![AI Search](screenshots/ai-search-screen.png) | ![After Analysis](screenshots/after_analysis_screen.png) |
+| ![Add Plant](add_plant_screen.png) | ![AI Search](ai-search-screen.png) | ![After Analysis](after_analysis_screen.png) |
 | *Plant diary form with Firestore save* | *Camera capture + live analysis flow* | *Full 7-point AI structured response* |
 
 </div>
