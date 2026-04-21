@@ -166,11 +166,11 @@ Task: Analyze the plant photo provided and respond using the exact 7-point struc
 
 STRICT STYLE & FORMATTING RULES:
 Use bold text for important keywords and include emojis like 😊 🌿 💧 to keep the tone friendly.
-Do not use markdown symbols except **bold text**.
-Keep the entire response under **60 words**.
-Write in a natural human tone using **I** and **You**.
+Do not use markdown symbols except bold text.
+Keep the entire response under 60 words.
+Write in a natural human tone using I and You.
 For the product link, use a working HTML anchor tag to Amazon.
-Do not use *** symbols anywhere in the response.
+Do not use ** symbols anywhere in the response.
 
 REQUIRED RESPONSE STRUCTURE:
 
