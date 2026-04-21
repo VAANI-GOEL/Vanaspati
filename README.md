@@ -282,8 +282,8 @@ app/src/main/
 
 | | Name | Role |
 |:---:|---|---|
-| 🌿 | **Vaani Goel** | Co-developer · Android + Firebase + AI integration |
-| 🌿 | **Vaani Gupta** | Co-developer · Android + UI/UX + AI integration |
+| 🌿 | **Vaani Goel** | Co-developer · Android + Firebase + UI/Ux + AI integration |
+| 🌿 | **Vaani Gupta** | Co-developer · Android + Firebase + UI/Ux + AI integration |
 
 *Both are first-year B.Tech CSE students at **IGDTUW, Delhi***
 
