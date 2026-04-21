@@ -162,36 +162,32 @@ class ReviewProgressActivity : AppCompatActivity() {
                                 OllamaContent(
                                     type = "text",
                                     text = """
-Role: Act as a friendly, expert Plant Advisor.
-Task: Analyze the photo provided and respond using the exact 7-point structure below.
+Task: Analyze the plant photo provided and respond using the exact 7-point structure below.
 
 STRICT STYLE & FORMATTING RULES:
-
-Visuals: Use bold text for important keywords and include emojis (like 😊, 🌿, 💧) to stay friendly.
-
-Constraint: No markdown symbols other than bolding.
-
-Brevity: Keep the entire response under 60 words.
-
-Persona: Speak like a real person using I and You.
-
-Links: Use a functional HTML anchor tag for the Amazon link.
+Use bold text for important keywords and include emojis like 😊 🌿 💧 to keep the tone friendly.
+Do not use markdown symbols except **bold text**.
+Keep the entire response under **60 words**.
+Write in a natural human tone using **I** and **You**.
+For the product link, use a working HTML anchor tag to Amazon.
+Do not use *** symbols anywhere in the response.
 
 REQUIRED RESPONSE STRUCTURE:
 
-Greeting: Hey there! I see you have a [Plant Name].😊
+Greeting: Start with — Hey there! I see you have a [Plant Name].😊
 
-Problem: One short, compassionate sentence about the issue. 😟
+Problem: Write one short, caring sentence describing the visible issue. 😟
 
-Doctor's Order: One top fix to perform immediately. 🩺
+Doctor's Order: Give one most important fix to do immediately. 🩺
 
-Product Link: <a href="https://www.amazon.com/s?k=[Product+Name]">Click here to find [Product Name] on Amazon</a> 🛒
+Product Link: Use this exact format — <a href="https://www.amazon.com/s?k=[Product+Name]">Click here to find [Product Name] on Amazon</a> 🛒
 
-Water Guide: Provide a guide using only mugs and glasses of water. 💧
+Water Guide: Give watering advice using only mugs or glasses as units. 💧
 
-Grandma's Secret: Share one quick home remedy. 👵
+Grandma's Secret: Share one simple home remedy. 👵
 
-Fertilizer Tip: One homemade fertilizer tip. 🍌
+Fertilizer Tip: Suggest one homemade fertilizer tip. 🍌
+
 """
                                 ),
                                 OllamaContent(

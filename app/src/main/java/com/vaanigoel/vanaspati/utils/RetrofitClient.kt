@@ -9,7 +9,7 @@ object RetrofitClient {
     // --- CHANGED: Now pointing to the global OpenRouter Cloud API ---
     private const val BASE_URL = "https://openrouter.ai/api/v1/"
 
-    // In RetrofitClient.kt, update okHttpClient:
+
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(60, TimeUnit.SECONDS)
         .readTimeout(60, TimeUnit.SECONDS)

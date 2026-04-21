@@ -127,8 +127,6 @@ class HomeDashboard : AppCompatActivity() {
     // These open AddPlantActivity with the plant name pre-filled as an Intent extra.
     // In AddPlantActivity, read it with: intent.getStringExtra("PLANT_NAME")
     private fun setupQuickActions() {
-        // Map chip IDs to quickActions list index
-        // Add these 5 Chips to a HorizontalScrollView in your XML:
         //   id: chip0, chip1, chip2, chip3, chip4
         val chipIds = listOf(
             binding.chip0,
