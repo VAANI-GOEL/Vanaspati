@@ -42,11 +42,12 @@ class ReviewProgressActivity : AppCompatActivity() {
     private var isAnalyzing = false
 
     private val modelPriorityList = mutableListOf(
-        "google/gemma-4-31b-it:free",
-        "google/gemma-4-26b-a4b-it:free",
-        "google/gemma-3-27b-it:free",
         "nvidia/nemotron-nano-12b-v2-vl:free",
-        "google/gemma-3-12b-it:free"
+        "google/gemma-3-12b-it:free",
+        "google/gemma-3-27b-it:free",
+        "google/gemma-4-31b-it:free",
+        "google/gemma-4-26b-a4b-it:free"
+
     ).also { it.shuffle() }
 
     // ─── Permission launcher ───────────────────────────────────────────────────
