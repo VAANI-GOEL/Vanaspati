@@ -1,15 +1,21 @@
 package com.vaanigoel.vanaspati.utils
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.vaanigoel.vanaspati.BuildConfig
@@ -21,21 +27,44 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 
 class ReviewProgressActivity : AppCompatActivity() {
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                startCamera()
+            } else {
+                Toast.makeText(this, "Camera permission is required", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     private lateinit var binding: ActivityReviewProgressBinding
     private var photoUri: Uri? = null
     private var selectedBitmap: Bitmap? = null
     private var isAnalyzing = false
 
-    // Randomized priority list to balance server load across the CSE-3 batch
     private val modelPriorityList = mutableListOf(
-        "google/gemma-4-31b-it:free",
-        "google/gemma-4-26b-a4b-it:free",
-        "google/gemma-3-27b-it:free",
         "nvidia/nemotron-nano-12b-v2-vl:free",
-        "google/gemma-3-12b-it:free"
-    ).also { it.shuffle() }
+        "google/gemma-3-12b-it:free",
+        "google/gemma-3-27b-it:free",
+        "google/gemma-4-31b-it:free",
+        "google/gemma-4-26b-a4b-it:free"
 
+    )
+
+    // ─── Permission launcher ───────────────────────────────────────────────────
+    private val requestCameraPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                launchCamera()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Camera permission is required to capture plant photos",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+    // ─── Camera launcher ──────────────────────────────────────────────────────
     private val takePhotoLauncher =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success && photoUri != null) {
@@ -47,6 +76,7 @@ class ReviewProgressActivity : AppCompatActivity() {
                     selectedBitmap = scaled
                 } catch (e: Exception) {
                     Log.e("CAMERA_ERROR", "Failed to decode photo: ${e.message}")
+                    Toast.makeText(this, "Failed to load photo", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(this, "No photo captured", Toast.LENGTH_SHORT).show()
@@ -74,7 +104,30 @@ class ReviewProgressActivity : AppCompatActivity() {
         }
     }
 
+    // ─── Camera flow with permission check ────────────────────────────────────
     private fun openCameraFlow() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                launchCamera()
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
+                Toast.makeText(
+                    this,
+                    "Camera access is needed to photograph your plant",
+                    Toast.LENGTH_LONG
+                ).show()
+                requestCameraPermission.launch(Manifest.permission.CAMERA)
+            }
+            else -> {
+                requestCameraPermission.launch(Manifest.permission.CAMERA)
+            }
+        }
+    }
+
+    private fun launchCamera() {
         try {
             val photoFile = File.createTempFile("plant_capture", ".jpg", cacheDir)
             photoUri = FileProvider.getUriForFile(this, "${packageName}.provider", photoFile)
@@ -84,20 +137,19 @@ class ReviewProgressActivity : AppCompatActivity() {
         }
     }
 
+    // ─── Plant analysis ───────────────────────────────────────────────────────
     private fun analyzePlant(bitmap: Bitmap, modelIndex: Int = 0) {
-        // Exit strategy if all models fail
         if (modelIndex >= modelPriorityList.size) {
             setLoadingState(false)
-            binding.tvResponse.text = "All AI engines are busy (9:00 AM Rush). Please try in a minute."
+            binding.tvResponse.text = "Come back in some time...sorry for inconvenience❤️😌"
             return
         }
 
         val currentModel = modelPriorityList[modelIndex]
-        binding.tvResponse.text = "Consulting Engine ${modelIndex + 1} of ${modelPriorityList.size}..."
+        binding.tvResponse.text = "Collecting leaves and flowers for you sweetheart...pls wait for a moment 🍂🤀"
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Encode once on the background thread
                 val base64Image = encodeImage(bitmap)
                 val dataUrl = "data:image/jpeg;base64,$base64Image"
 
@@ -110,19 +162,32 @@ class ReviewProgressActivity : AppCompatActivity() {
                                 OllamaContent(
                                     type = "text",
                                     text = """
-    Act as a friendly, expert Plant Advisor. Analyze this photo and reply in this exact way:
-    
-    1. Hey there! I see you've got a [Plant Name]... (Mention its Legume family status if it's Aparajita).
-    2. Tell me the problem in one short, compassionate sentence.
-    3. Give me your top 'Doctor's Order' to fix it immediately.
-    4. Provide an HTML link for the best product like this: <a href="https://www.amazon.com/s?k=[Product+Name]">Click here to find [Product Name] on Amazon</a>
-    5. Share a quick 'Grandma's secret' home remedy.
-    6.Homemade fertilizer.
-    STRICT RULES: 
-    - NEVER use ** asterisks or any bold symbols. 
-    - Use HTML tags for the link.
-    - Speak like a real person using 'I' and 'You'. 
-    - Keep it under 60 words total.
+Task: Analyze the plant photo provided and respond using the exact 7-point structure below.
+
+STRICT STYLE & FORMATTING RULES:
+Use bold text for important keywords and include emojis like 😊 🌿 💧 to keep the tone friendly.
+Do not use markdown symbols except bold text.
+Keep the entire response under 60 words.
+Write in a natural human tone using I and You.
+For the product link, use a working HTML anchor tag to Amazon.
+Do not use ** symbols anywhere in the response.
+
+REQUIRED RESPONSE STRUCTURE:
+
+Greeting: Start with — Hey there! I see you have a [Plant Name].😊
+
+Problem: Write one short, caring sentence describing the visible issue. 😟
+
+Doctor's Order: Give one most important fix to do immediately. 🩺
+
+Product Link: Use this exact format — <a href="https://www.amazon.com/s?k=[Product+Name]">Click here to find [Product Name] on Amazon</a> 🛒
+
+Water Guide: Give watering advice using only mugs or glasses as units. 💧
+
+Grandma's Secret: Share one simple home remedy. 👵
+
+Fertilizer Tip: Suggest one homemade fertilizer tip. 🍌
+
 """
                                 ),
                                 OllamaContent(
@@ -141,35 +206,40 @@ class ReviewProgressActivity : AppCompatActivity() {
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-
-                        val rawContent = response.body()?.choices?.getOrNull(0)?.message?.content?.trim() ?: ""
+                        val rawContent = response.body()
+                            ?.choices?.getOrNull(0)
+                            ?.message?.content
+                            ?.trim() ?: ""
 
                         setLoadingState(false)
 
-                        // 1. Tell the TextView that the text contains HTML links
-                        binding.tvResponse.text = android.text.Html.fromHtml(rawContent, android.text.Html.FROM_HTML_MODE_COMPACT)
+                        if (rawContent.isEmpty()) {
+                            binding.tvResponse.text = "Response body was empty."
+                        } else {
+                            // ✅ Render HTML so <a href> tags become clickable links
+                            binding.tvResponse.text = Html.fromHtml(
+                                rawContent,
+                                Html.FROM_HTML_MODE_COMPACT
+                            )
+                            // ✅ This makes links actually tappable
+                            binding.tvResponse.movementMethod = LinkMovementMethod.getInstance()
+                            // ✅ Nice blue color for links
+                            binding.tvResponse.setLinkTextColor(Color.parseColor("#4CAF50"))
+                        }
 
-                        // 2. THIS IS THE KEY: This makes the link actually open the browser
-                        binding.tvResponse.movementMethod = android.text.method.LinkMovementMethod.getInstance()
-
-                        // 3. Optional: Set a nice blue color for your links
-                        binding.tvResponse.setLinkTextColor(android.graphics.Color.parseColor("#007BFF"))
-                        binding.tvResponse.text = rawContent ?: "Response body was empty."
-                    }
-                    // Fallback logic for Rate Limits (429), Busy Servers (503), or Missing Endpoints (404)
-                    else if (response.code() in listOf(404, 429, 502, 503)) {
+                    } else if (response.code() in listOf(404, 429, 502, 503)) {
                         Log.w("API_FALLBACK", "Model $currentModel failed with ${response.code()}. Retrying...")
                         analyzePlant(bitmap, modelIndex + 1)
-                    }
-                    else {
+
+                    } else {
                         setLoadingState(false)
                         val errorTxt = response.errorBody()?.string() ?: "Unknown error"
                         binding.tvResponse.text = "Error ${response.code()}: $errorTxt"
                     }
                 }
+
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    // Network timeouts or connection drops also trigger a fallback
                     Log.e("API_EXCEPTION", "Exception on $currentModel: ${e.message}")
                     analyzePlant(bitmap, modelIndex + 1)
                 }
@@ -177,6 +247,7 @@ class ReviewProgressActivity : AppCompatActivity() {
         }
     }
 
+    // ─── Helpers ──────────────────────────────────────────────────────────────
     private fun scaleBitmap(bitmap: Bitmap, maxDim: Int = 1024): Bitmap {
         val ratio = minOf(maxDim.toFloat() / bitmap.width, maxDim.toFloat() / bitmap.height)
         if (ratio >= 1f) return bitmap
@@ -205,4 +276,8 @@ class ReviewProgressActivity : AppCompatActivity() {
         selectedBitmap?.recycle()
         selectedBitmap = null
     }
+}
+
+private fun ReviewProgressActivity.startCamera() {
+    TODO("Not yet implemented")
 }

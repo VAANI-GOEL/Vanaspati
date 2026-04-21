@@ -2,30 +2,37 @@ package com.vaanigoel.vanaspati.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.core.content.edit // This makes the warnings go away
 
 class PrefsManager(context: Context) {
-    private val sharedPref: SharedPreferences =
-        context.getSharedPreferences("VanaspatiPrefs", Context.MODE_PRIVATE)
 
-    // Check if user has done the first-time setup
-    fun setFirstLogin(isFirst: Boolean) {
-        sharedPref.edit { putBoolean("is_first_login", isFirst) }
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences("vanaspati_prefs", Context.MODE_PRIVATE)
+
+    companion object {
+        private const val KEY_LOGGED_IN = "logged_in"
+        private const val KEY_UID       = "uid"
+        private const val KEY_EMAIL     = "email"
     }
 
-    fun isFirstLogin(): Boolean = sharedPref.getBoolean("is_first_login", true)
-
-    // Save/Get the selected Indian Language
-    fun saveLanguage(language: String) {
-        sharedPref.edit { putString("selected_language", language) }
+    fun setLoggedIn(isLoggedIn: Boolean) {
+        prefs.edit().putBoolean(KEY_LOGGED_IN, isLoggedIn).apply()
     }
 
-    fun getLanguage(): String = sharedPref.getString("selected_language", "English") ?: "English"
-
-    // Save/Get Gardening Help Level
-    fun saveHelpLevel(level: String) {
-        sharedPref.edit { putString("help_level", level) }
+    fun isLoggedIn(): Boolean {
+        return prefs.getBoolean(KEY_LOGGED_IN, false)
     }
 
-    fun getHelpLevel(): String = sharedPref.getString("help_level", "Beginner") ?: "Beginner"
+    fun saveUser(uid: String, email: String) {
+        prefs.edit()
+            .putString(KEY_UID, uid)
+            .putString(KEY_EMAIL, email)
+            .apply()
+    }
+
+    fun getUid(): String   = prefs.getString(KEY_UID, "")   ?: ""
+    fun getEmail(): String = prefs.getString(KEY_EMAIL, "") ?: ""
+
+    fun logout() {
+        prefs.edit().clear().apply()
+    }
 }

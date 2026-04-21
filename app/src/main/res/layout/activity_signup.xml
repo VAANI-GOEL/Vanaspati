@@ -13,19 +13,19 @@
         android:paddingHorizontal="28dp"
         android:paddingBottom="40dp">
 
-        <!-- Lottie Animation -->
+        <!-- Lottie Animation (same as login for consistency) -->
         <FrameLayout
             android:id="@+id/animationContainer"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="180dp"
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.airbnb.lottie.LottieAnimationView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
                 android:layout_gravity="center"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
@@ -38,11 +38,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Welcome back"
+            android:text="Create account"
             android:textColor="#1B4332"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:letterSpacing="0.01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/animationContainer" />
 
@@ -52,13 +51,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Sign in to care for your plants"
+            android:text="Start your plant care journey"
             android:textColor="#52796F"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-        <!-- Card container -->
+        <!-- Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/card"
             android:layout_width="match_parent"
@@ -75,12 +74,39 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
+                <!-- Name field -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/nameLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Full name"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/input_stroke_color"
+                    app:boxStrokeWidth="1.5dp"
+                    app:hintTextColor="#52796F"
+                    app:startIconDrawable="@drawable/ic_person"
+                    app:startIconTint="#52796F">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName|textCapWords"
+                        android:textColor="#1B4332"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <!-- Email field -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/emailLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:hint="Email address"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
@@ -129,26 +155,14 @@
                         android:textSize="15sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Forgot password -->
-                <TextView
-                    android:id="@+id/tvForgotPassword"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="10dp"
-                    android:text="Forgot password?"
-                    android:textColor="#2D6A4F"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <!-- Login button -->
+                <!-- Signup button -->
                 <Button
-                    android:id="@+id/btnLogin"
+                    android:id="@+id/btnSignup"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="28dp"
                     android:backgroundTint="#2D6A4F"
-                    android:text="Login"
+                    android:text="Create Account"
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
@@ -158,7 +172,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Register row -->
+        <!-- Login row -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -171,15 +185,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Don't have an account? "
+                android:text="Already have an account? "
                 android:textColor="#52796F"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/tvRegister"
+                android:id="@+id/tvLogin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Register now"
+                android:text="Sign in"
                 android:textColor="#1B4332"
                 android:textSize="14sp"
                 android:textStyle="bold" />

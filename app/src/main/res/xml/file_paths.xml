@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <cache-path
-        name="my_plant_images"
-        path="." />
+    <cache-path name="plant_photos" path="." />
 </paths>
